@@ -28,6 +28,19 @@ app.use(rateLimiter({
 
 app.use(helmet());
 app.use(xss());
+
+// swagger
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDoc = YAML.load("./swagger.yaml")
+
+// home route
+app.get("/", function (req, res) {
+  res.send("<h1>jobs api</h1><a href='/api-docs'>Documentation</a>");
+})
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+
 // routes
 app.use('/api/v1/jobs', authMiddleware, require("./routes/jobs"));
 app.use("/api/v1/auth", require("./routes/auth")
